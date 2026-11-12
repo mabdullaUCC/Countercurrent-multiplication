@@ -1,0 +1,237 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>Loop of Henle – Countercurrent Multiplier</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+:root{--bg:#fff;--fg:#111;--bar:#f1f1f1;--bd:#ccc;--card:#f7f7f7}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#1b1b1b;--fg:#eee;--bar:#2a2a2a;--bd:#555;--card:#242424}}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:Helvetica,Arial,sans-serif}
+#w{max-width:1240px;margin:0 auto;padding:8px}
+h2{margin:4px 8px 8px;text-align:center;font-size:clamp(16px,2.4vw,26px)}
+#main{display:flex;gap:10px;flex-wrap:wrap}
+#sv{flex:3 1 640px;min-width:0}
+svg{width:100%;height:auto;display:block;background:#fff;border-radius:8px}
+text{font-family:Helvetica,Arial,sans-serif;fill:#111}
+.v{font-size:19px;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.t{font-size:15px;font-weight:700;fill:#1c5fa8;paint-order:stroke;stroke:#fff;stroke-width:3px}
+#side{flex:1 1 260px;display:flex;flex-direction:column;gap:8px}
+.st{display:flex;gap:10px;width:100%;box-sizing:border-box;text-align:left;align-items:flex-start;background:var(--card);color:var(--fg);border:2px solid var(--bd);border-radius:10px;padding:8px 10px;cursor:pointer;font-size:14.5px;line-height:1.35;transition:border-color .15s,background .15s}
+.st:hover{border-color:#2a8aa8}
+.st b.n{flex:0 0 28px;height:28px;border-radius:50%;border:2px solid #2a8aa8;color:#2a8aa8;display:flex;align-items:center;justify-content:center}
+.st.on{border-color:#2a8aa8;background:#e3f3f8;color:#111}
+#bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--bar);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;margin-bottom:8px}
+button{font:inherit;padding:6px 12px;border:1px solid var(--bd);border-radius:6px;background:var(--bg);color:var(--fg);cursor:pointer;transition:background .15s,border-color .15s,transform .05s}
+button:hover{border-color:#2a8aa8}
+button:active{transform:translateY(1px)}
+button:focus-visible{outline:3px solid #2a8aa8;outline-offset:2px}
+button.on{background:#2a8aa8;color:#fff;border-color:#2a8aa8}
+label.tg{position:relative;display:inline-flex;gap:7px;align-items:center;padding:6px 12px 6px 10px;border:1px solid var(--bd);border-radius:999px;background:var(--bg);color:var(--fg);cursor:pointer;user-select:none;transition:background .15s,border-color .15s,transform .05s}
+label.tg{white-space:nowrap}
+.br{flex-basis:100%;height:0}
+label.tg.cap{padding:6px 16px 6px 10px}
+label.tg.cap::before{flex:0 0 38px;height:22px;border:0;border-radius:999px;background:var(--bd);box-shadow:none;transition:background .15s}
+label.tg.cap::after{content:"";position:absolute;left:13px;top:50%;width:16px;height:16px;margin-top:-8px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.4);transition:left .15s}
+label.tg.cap:has(input:checked)::before{background:#d6252d;box-shadow:none}
+label.tg.cap:has(input:checked)::after{left:33px}
+label.tg input{position:absolute;opacity:0;width:1px;height:1px;margin:0;pointer-events:none}
+label.tg::before{content:"";flex:0 0 14px;height:14px;box-sizing:border-box;border-radius:50%;border:2px solid var(--bd);background:transparent}
+label.tg:hover{border-color:#2a8aa8}
+label.tg:active{transform:translateY(1px)}
+label.tg:has(input:checked){background:#e3f3f8;color:#111;border-color:#2a8aa8}
+label.tg:has(input:checked)::before{background:#2a8aa8;border-color:#2a8aa8;box-shadow:inset 0 0 0 2px #e3f3f8}
+label.tg:has(input:focus-visible){outline:3px solid #2a8aa8;outline-offset:2px}
+label.c{display:flex;gap:5px;align-items:center;cursor:pointer}
+#gd{font-weight:700;min-width:150px}
+#fx{margin-top:10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:8px}
+#fx h3{grid-column:1/-1;margin:2px 4px;font-size:16px}
+.fi{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 10px;font-size:13.5px;line-height:1.4}
+.fi h4{margin:0 0 6px;font-size:14.5px;display:flex;align-items:center;gap:8px}
+.fi h4 i{font-style:normal;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;border:1px solid var(--bd)}
+.fi.is-on h4 i{background:#e3f3f8;color:#111;border-color:#2a8aa8}
+.fi p{margin:4px 0;padding:3px 8px;border-left:3px solid transparent;border-radius:3px;opacity:.7}
+.fi p.cur{border-left-color:#2a8aa8;background:rgba(42,138,168,.14);opacity:1}
+</style></head><body><div id="w">
+<h2>As water and solutes are reabsorbed, the loop first concentrates the filtrate, then dilutes it.</h2>
+<div id="bar"><button type="button" id="rs">↻ Restart build-up</button><button type="button" id="sk">⏭ Steady state</button><button type="button" id="wk">▶ Walk through steps</button><button type="button" id="df">⟲ Reset to default</button>
+<label class="tg cap"><input type="checkbox" id="lp"> Loop diuretic (block NaCl pump)</label><label class="tg"><input type="checkbox" id="adh" checked> ADH present</label><span class="br"></span><label class="tg"><input type="checkbox" id="vx" checked> Vasa recta H₂O &amp; NaCl</label><label class="tg"><input type="checkbox" id="showW" checked> <span style="color:#2f86e6;font-weight:700">●</span> Water dots</label><label class="tg"><input type="checkbox" id="showN" checked> <span style="color:#e33434;font-weight:700">●</span> NaCl dots</label><span id="gd"></span><label class="c" style="margin-left:auto"><b>Speed</b><input type="range" id="sp" min="0.25" max="3" step="0.25" value="1" style="width:130px;accent-color:#2a8aa8"><b id="spv" style="min-width:36px">1×</b></label></div>
+<div id="main"><div id="sv"><svg id="s" viewBox="0 84 1000 900"></svg><div id="fx"><h3>What each toggle does</h3>
+<div class="fi" data-for="lp"><h4>Loop diuretic (block NaCl pump) <i></i></h4>
+<p data-s="on"><b>Blocked:</b> the ascending limb stops pumping out Na⁺ and Cl⁻ (as furosemide does at the NKCC2 transporter). The medullary gradient collapses toward 300 mOsm, the filtrate no longer becomes concentrated at the bend or dilute at the top, and more NaCl and water reach the distal tubule and are lost in the urine.</p>
+<p data-s="off"><b>Normal:</b> the ascending limb actively pumps NaCl out into the interstitium. The gradient builds up to about 1200 mOsm in the inner medulla.</p></div>
+<div class="fi" data-for="adh"><h4>ADH present <i></i></h4>
+<p data-s="on"><b>Present:</b> the collecting duct is water-permeable, so water leaves it and follows the medullary gradient. The urine becomes concentrated, approaching the osmolality of the inner medulla.</p>
+<p data-s="off"><b>Absent:</b> the collecting duct is water-impermeable, so little water is reabsorbed. The H₂O arrows fade and the urine stays dilute (about 100 mOsm) and large in volume.</p></div>
+<div class="fi" data-for="vx"><h4>Vasa recta H₂O &amp; NaCl <i></i></h4>
+<p data-s="on"><b>Shown:</b> the exchange arrows and dots on the vasa recta appear. Blood flowing down picks up NaCl and loses water, and blood flowing up does the reverse. This countercurrent exchange carries reabsorbed water and solute away without washing out the gradient.</p>
+<p data-s="off"><b>Hidden:</b> only the vasa recta arrows and dots are hidden. In this diagram the osmolality values do not change, because the vasa recta exchange is illustrated rather than calculated.</p></div>
+<div class="fi" data-for="showW"><h4>Water dots <i></i></h4>
+<p data-s="on"><b>Shown:</b> blue dots show water leaving the descending limb, the collecting duct and the vasa recta.</p>
+<p data-s="off"><b>Hidden:</b> the blue dots disappear. This is a display option only and does not change any values.</p></div>
+<div class="fi" data-for="showN"><h4>NaCl dots <i></i></h4>
+<p data-s="on"><b>Shown:</b> red dots show NaCl leaving the ascending limb and moving through the vasa recta.</p>
+<p data-s="off"><b>Hidden:</b> the red dots disappear. This is a display option only and does not change any values.</p></div>
+</div></div><div id="side"></div></div></div>
+<script>
+const NS='http://www.w3.org/2000/svg',$=i=>document.getElementById(i),S=$('s');
+const mk=(p,t,a={},h)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(h!=null)e.innerHTML=h;p.appendChild(e);return e};
+const LV=[300,430,560,690,800],IF=[300,400,600,900,1200],AF=[100,200,400,700,1200];
+const li=(y,arr)=>{if(y<=LV[0])return arr[0];if(y>=LV[4])return arr[4];let i=0;while(y>LV[i+1])i++;return arr[i]+(arr[i+1]-arr[i])*(y-LV[i])/(LV[i+1]-LV[i])};
+let g=0,pump=1,adhA=1;
+const I=y=>300+(li(y,IF)-300)*g,D=I,A=y=>300+(li(y,AF)-300)*g;
+const CS=[[100,[214,238,248]],[300,[250,232,176]],[600,[244,190,110]],[900,[236,140,60]],[1200,[214,80,30]]];
+const col=(v,w=0)=>{v=Math.max(100,Math.min(1200,v));let i=0;while(i<3&&v>CS[i+1][0])i++;const a=CS[i],b=CS[i+1],t=(v-a[0])/(b[0]-a[0]);return'rgb('+[0,1,2].map(k=>Math.round((a[1][k]+(b[1][k]-a[1][k])*t)*(1-w)+255*w)).join(',')+')'};
+// defs
+const df=mk(S,'defs');
+const grad=(id,y1,y2,x1=0,x2=0)=>{const g=mk(df,'linearGradient',{id,gradientUnits:'userSpaceOnUse',x1,x2,y1,y2});return g};
+const gI=grad('gI',90,880),gD=grad('gD',250,790),gA=grad('gA',250,790),gC=grad('gC',210,800);
+const ys=(a,b,n)=>Array.from({length:n},(_,i)=>a+(b-a)*i/(n-1));
+const gs=(G,y1,y2,n)=>ys(y1,y2,n).map(y=>({y,e:mk(G,'stop',{offset:(y-y1)/(y2-y1)})}));
+const sI=gs(gI,90,880,12),sD=gs(gD,250,790,12),sA=gs(gA,250,790,12),sC=gs(gC,210,800,12);
+const vg=grad('gV',0,0,290,720);mk(vg,'stop',{offset:0,'stop-color':'#d40000'});mk(vg,'stop',{offset:.55,'stop-color':'#b04a78'});mk(vg,'stop',{offset:1,'stop-color':'#4f7fc4'});
+const bar=grad('gBar',110,800);
+// Heat-scale stops use the same vertical positions and osmolalities as the nephron interstitium.
+const scaleY=[110,300,430,560,690,800];
+const scaleStops=scaleY.map(y=>({y,e:mk(bar,'stop',{offset:(y-110)/690})}));
+// background
+mk(S,'rect',{x:20,y:90,width:910,height:800,fill:'url(#gI)'});
+[300,560].forEach(y=>mk(S,'path',{d:`M20 ${y}H930`,stroke:'#999','stroke-width':1.5}));
+[[120,'Cortex'],[440,'Outer medulla'],[730,'Inner medulla']].forEach(([y,t])=>mk(S,'text',{x:34,y,style:'font-size:22px;font-style:italic;font-weight:700'},t));
+// legend
+const ar=(p,x,y,c,len=44)=>mk(p,'path',{d:`M${x+len} ${y}H${x+12}M${x+8} ${y-5}L${x} ${y}L${x+8} ${y+5}Z`,stroke:c,'stroke-width':4,fill:c,'stroke-linejoin':'round'});
+const lg=mk(S,'g',{transform:'translate(300 106)'});mk(lg,'rect',{x:-12,y:-18,width:610,height:38,rx:8,fill:'#fff',opacity:.75});
+ar(lg,0,0,'#d6252d',36);mk(lg,'text',{x:46,y:6,style:'font-size:16px;font-weight:700'},'Active transport');ar(lg,205,0,'#1c63b0',36);mk(lg,'text',{x:251,y:6,style:'font-size:16px;font-weight:700'},'Passive transport');
+mk(lg,'rect',{x:415,y:-9,width:30,height:18,fill:'#a6702e',stroke:'#6d4412'});mk(lg,'text',{x:455,y:6,style:'font-size:16px;font-weight:700'},'Water impermeable');
+// colour bar
+mk(S,'rect',{x:950,y:110,width:24,height:690,fill:'url(#gBar)',stroke:'#555'});
+const scaleLabels=LV.map((y,i)=>{
+ mk(S,'path',{d:`M946 ${y}H979`,stroke:'#444','stroke-width':1.4});
+ return mk(S,'text',{x:943,y:y+5,'text-anchor':'end',style:'font-size:15px;font-weight:700'},'');
+});
+mk(S,'text',{transform:'translate(992 480) rotate(-90)','text-anchor':'middle',style:'font-size:15px;font-weight:700'},'Osmolality of interstitial fluid (mOsm)');
+// vasa recta
+const VR='M290 300V790C290 910 720 910 720 790V250';
+mk(S,'path',{d:'M120 215C120 262 290 250 290 300',fill:'none',stroke:'#b8b8b8','stroke-width':30});mk(S,'path',{d:'M120 215C120 262 290 250 290 300',fill:'none',stroke:'#d40000','stroke-width':23});
+mk(S,'path',{d:VR,fill:'none',stroke:'#b8b8b8','stroke-width':43,'stroke-linecap':'round'});mk(S,'path',{d:VR,fill:'none',stroke:'url(#gV)','stroke-width':35,'stroke-linecap':'round'});
+mk(S,'path',{d:'M290 300V790C290 910 720 910 720 790V250',fill:'none',stroke:'none',id:'vrp'});
+// nephron
+const PCT='M150 178C190 118 230 225 285 180S365 130 400 205S440 215 440 250',DCT='M560 250C560 205 600 190 640 215S720 245 760 205S840 190 880 210',FULL='M118 178L'+PCT.slice(1)+'V790A60 60 0 0 0 560 790V250'+DCT.replace('M560 250','')+'V800';
+const wall=(d,c,w=28)=>mk(S,'path',{d,fill:'none',stroke:c,'stroke-width':w,'stroke-linecap':'round','stroke-linejoin':'round'}),lum=(d,c,w=20,cap='butt')=>mk(S,'path',{d,fill:'none',stroke:c,'stroke-width':w,'stroke-linecap':cap,'stroke-linejoin':'round'});
+// glomerulus + capsule
+mk(S,'circle',{cx:110,cy:178,r:48,fill:'#f5e4b4',stroke:'#c9a06a','stroke-width':6});mk(S,'circle',{cx:110,cy:178,r:32,fill:'#d93a3a',stroke:'#8a1010','stroke-width':3});
+[[10,'30 20'],[20,'60 30']].forEach(([r,d])=>mk(S,'circle',{cx:110,cy:178,r,fill:'none',stroke:'#8a1010','stroke-width':2.5,'stroke-dasharray':d}));
+mk(S,'path',{d:'M110 130V90',stroke:'#8a1010','stroke-width':10});
+wall(PCT,'#d2a86e',54);lum(PCT,'#f3dca8','43','round');
+wall('M440 250V790','#e7cfa0',48);lum('M440 250V790','url(#gD)',37);
+wall('M440 790A60 60 0 0 0 560 790','#e7cfa0',48);const bendL=lum('M440 790A60 60 0 0 0 560 790','#d9531e',37);
+wall('M560 790V560','#c28c4a',43);wall('M560 560V262','#a6702e',55);wall(DCT,'#d2a86e',43);
+lum('M560 790V560','url(#gA)',32);lum('M560 560V262','url(#gA)',43);const dctL=lum(DCT,col(100),32,'round');
+wall('M880 210V800','#d2a86e',45);const cdL=lum('M880 210V800','url(#gC)',34);
+mk(S,'path',{d:'M860 800v28M880 806v28',stroke:'none'});
+const tx=(x,y,t,c,o={})=>mk(S,'text',{x,y,class:c,...o},t);
+tx(130,110,'','v');
+// labels
+[[150,112,'Proximal tubule'],[700,272,'Distal tubule',{'text-anchor':'middle'}],[880,186,'Collecting duct',{'text-anchor':'middle'}]].forEach(([x,y,t,o])=>mk(S,'text',{x,y,style:'font-size:14px;font-style:italic;fill:#555',...(o||{})},t));
+
+ // value labels
+const inside={'text-anchor':'middle',style:'font-size:14px;font-weight:800;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-linejoin:round'};
+const lblD=LV.map(y=>tx(440,y+5,'','v',inside)),lblA=LV.map(y=>tx(560,y+5,'','v',inside)),lblI=LV.map(y=>tx(500,y+5,'','v',{'text-anchor':'middle',style:'font-size:16px;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:3px'})),lblVL=LV.map(y=>tx(290,y+5,'','v',inside)),lblVR=LV.map(y=>tx(720,y+5,'','v',inside));
+const lblT=tx(500,848,'','v',{'text-anchor':'middle'}),lblG=tx(110,184,'300','v',{'text-anchor':'middle'}),lblP=tx(300,160,'300','v',{'text-anchor':'middle'}),lblDi=tx(700,200,'','v',{'text-anchor':'middle'}),lblU=tx(880,982,'','v',{'text-anchor':'middle',style:'font-size:20px'});
+// static arrows
+const MID=[345,470,610,735];
+const arrW=[],arrN=[];
+MID.forEach(y=>{const gW=mk(S,'g',{opacity:0});ar(gW,382,y,'#1c63b0',40);mk(gW,'text',{x:372,y:y+5,'text-anchor':'end',class:'t'},'H₂O');arrW.push(gW)});
+MID.forEach((y,i)=>{const gN=mk(S,'g',{opacity:0});ar(gN,508,y,i<3?'#d6252d':'#1c63b0',38);mk(gN,'text',{x:502,y:y+5,'text-anchor':'end',class:'t'},'NaCl');arrN.push(gN)});
+const arrC=[365,495,625,745].map(y=>{const gC2=mk(S,'g',{opacity:0});ar(gC2,816,y,'#1c63b0',40);mk(gC2,'text',{x:808,y:y+5,'text-anchor':'end',class:'t'},'H₂O');return gC2});
+// vasa recta exchange arrows
+const arR=(p,x,y,c,len)=>mk(p,'path',{d:`M${x} ${y}H${x+len-12}M${x+len-8} ${y-5}L${x+len} ${y}L${x+len-8} ${y+5}Z`,stroke:c,'stroke-width':3.5,fill:c,'stroke-linejoin':'round'});
+const arrV=[390,515,650].map(y=>{const gv=mk(S,'g',{opacity:0});
+ arR(gv,298,y,'#1c63b0',30);ar(gv,298,y+17,'#16224a',30);mk(gv,'text',{x:332,y:y+5,class:'t',style:'font-size:12px'},'H₂O');mk(gv,'text',{x:332,y:y+22,class:'t',style:'font-size:12px;fill:#16224a'},'NaCl');
+ ar(gv,736,y,'#1c63b0',30);arR(gv,736,y+17,'#16224a',30);mk(gv,'text',{x:770,y:y+5,class:'t',style:'font-size:12px'},'H₂O');mk(gv,'text',{x:770,y:y+22,class:'t',style:'font-size:12px;fill:#16224a'},'NaCl');return gv});
+
+// highlight + callouts
+const HL=[null,[380,240,125,210],[398,430,84,380],[420,740,170,130],[528,236,64,570],[530,170,200,140]].map(r=>r&&mk(S,'rect',{x:r[0],y:r[1],width:r[2],height:r[3],rx:14,fill:'#2a8aa8','fill-opacity':.12,stroke:'#2a8aa8','stroke-width':3,'stroke-dasharray':'8 5',opacity:0}));
+const NC=[null,[75,310],[75,370],[500,902],[656,356],[624,166]];
+const ncs=NC.map((c,i)=>{if(!c)return null;const gg=mk(S,'g',{transform:`translate(${c[0]} ${c[1]})`});mk(gg,'circle',{r:15,fill:'#fff',stroke:'#2a8aa8','stroke-width':3});mk(gg,'text',{y:7,'text-anchor':'middle',style:'font-size:19px;font-weight:700;fill:#2a8aa8'},i);return gg});
+// urine cup under the collecting duct
+const CT=852,CB=952,CH=CB-CT-4,cupD='M835 852L848 944Q849 952 858 952H902Q911 952 912 944L925 852Z';
+const cclip=mk(df,'clipPath',{id:'cupClip'});mk(cclip,'path',{d:cupD});
+mk(S,'path',{d:cupD,fill:'#f4f8fb'});
+const cupFill=mk(S,'rect',{x:830,y:CB,width:100,height:0,'clip-path':'url(#cupClip)'});
+const cupSurf=mk(S,'path',{d:'M830 952H930',stroke:'rgba(0,0,0,.35)','stroke-width':2,fill:'none','clip-path':'url(#cupClip)'});
+const stOut=mk(S,'path',{d:'M880 822V900',fill:'none',stroke:'rgba(0,0,0,.3)','stroke-dasharray':'7 5'}),stIn=mk(S,'path',{d:'M880 822V900',fill:'none','stroke-dasharray':'7 5'});
+[.25,.5,.75].forEach(f=>{const y=CB-f*CH,x=912+(944-y)/92*13;mk(S,'path',{d:`M${x-11} ${y}H${x}`,stroke:'#555','stroke-width':2})});
+mk(S,'path',{d:cupD,fill:'none',stroke:'#555','stroke-width':3,'stroke-linejoin':'round'});mk(S,'path',{d:'M830 852H930',stroke:'#555','stroke-width':4,'stroke-linecap':'round'});
+const vlab=(y,sz,wt)=>mk(S,'text',{x:822,y,'text-anchor':'end',style:`font-size:${sz}px;font-weight:${wt}`},'');
+mk(S,'text',{x:822,y:884,'text-anchor':'end',style:'font-size:13px;font-style:italic;fill:#555'},'Daily urine volume');
+const lblVol=vlab(910,22,800),lblQ=vlab(932,13,700);
+let cupF=.3,stOff=0;
+// particles
+const pg=mk(S,'g'),fp=mk(S,'path',{d:FULL,fill:'none',stroke:'none'}),FL=fp.getTotalLength();
+const fb=Array.from({length:30},(_,i)=>({e:mk(pg,'circle',{r:3.4,fill:'#4a3a2a',opacity:.8}),d:i/30*FL}));
+const vp=document.getElementById('vrp'),VL=vp.getTotalLength();const vb=Array.from({length:16},(_,i)=>({e:mk(pg,'circle',{r:3.2,fill:'#fff',stroke:'#7a1a1a','stroke-width':1}),d:i/16*VL}));
+let pts=[];
+// Each transport arrow briefly brightens when a matching particle exits the tubule.
+const arrowFlash=new Map();
+const flashArrow=(type,y)=>{
+ const arrows=type==='n'?arrN:type==='c'?arrC:arrW;
+ const nearest=MID.reduce((best,v,i)=>Math.abs(v-y)<Math.abs(MID[best]-y)?i:best,0);
+ arrowFlash.set(arrows[nearest],0.38);
+};
+const dotsVisible=type=>type==='n'?$('showN').checked:$('showW').checked;
+const spawn=(x,y,dx,type)=>{if(!dotsVisible(type))return;const e=mk(pg,'circle',{r:type=='w'?3.2:4.2,fill:type=='w'||type=='c'?'#2f86e6':'#e33434',stroke:'#fff','stroke-width':1});pts.push({e,x,y,dx,t:0,type});flashArrow(type,y)};
+// steps
+const STP=[['Filtrate entering the nephron loop is isosmotic to both plasma and cortical interstitial fluid (300 mOsm).'],['Water moves out of the filtrate in the descending limb down its osmotic gradient. This concentrates the filtrate.'],['Filtrate reaches its highest concentration at the bend of the loop (1200 mOsm).'],['Na⁺ and Cl⁻ are pumped out of the filtrate (the ascending limb is water-impermeable). This ↑ the interstitial fluid osmolality.'],['Filtrate is at its most dilute as it leaves the nephron loop. At 100 mOsm, it is hypo-osmotic to the interstitial fluid.']];
+const side=$('side'),cards=STP.map((s,i)=>{const d=document.createElement('button');d.type='button';d.className='st';d.innerHTML=`<b class="n">${i+1}</b><span>${s[0]}</span>`;d.onclick=()=>{step=step==i+1?0:i+1;walk=false;$('wk').textContent='▶ Walk through steps';$('wk').className='';$('wk').setAttribute('aria-pressed','false')};side.appendChild(d);return d});
+let step=0,walk=false,wT=0,wA=0;
+$('rs').onclick=()=>{g=0};$('sk').onclick=()=>{g=1};
+$('wk').onclick=()=>{walk=!walk;wT=performance.now();wA=0;$('wk').textContent=walk?'■ Stop':'▶ Walk through steps';$('wk').className=walk?'on':'';$('wk').setAttribute('aria-pressed',walk);if(walk)step=1};
+$('df').onclick=()=>{g=0;adhA=1;walk=false;step=0;wA=0;$('wk').textContent='▶ Walk through steps';$('wk').className='';$('wk').setAttribute('aria-pressed','false');
+ $('lp').checked=false;['adh','vx','showW','showN'].forEach(i=>$(i).checked=true);$('sp').value=1;pts.forEach(q=>q.e.remove());pts=[]};
+let last=performance.now(),acc={w:0,n:0,c:0};
+const r5=v=>Math.round(v/5)*5;
+function frame(now){const spd=+$('sp').value,dt=Math.min(.05,(now-last)/1000)*spd;last=now;$('spv').textContent=spd+'×';
+ pump=$('lp').checked?0:1;const adh=$('adh').checked?1:0;adhA+=(adh-adhA)*Math.min(1,dt*1.5);
+ g+=((pump?1:0)-g)*dt/(pump?4:5);g=Math.max(0,Math.min(1,g));
+ if(walk){wA+=dt;if(wA>6.5){wA=0;step=step%5+1}}
+ // gradients
+ sI.forEach(s=>s.e.setAttribute('stop-color',col(I(s.y),.45)));
+ scaleStops.forEach(s=>s.e.setAttribute('stop-color',col(I(s.y),.45)));
+ scaleLabels.forEach((e,i)=>e.textContent=r5(I(LV[i])));
+ sD.forEach(s=>s.e.setAttribute('stop-color',col(D(s.y))));sA.forEach(s=>s.e.setAttribute('stop-color',col(A(s.y))));
+ const cv=y=>100+(I(y)-100)*adhA*(g>0?1:0)*(y>300?1:0)+(y<=300?(300-100)*0:0);sC.forEach(s=>s.e.setAttribute('stop-color',col(Math.max(100,100+(I(s.y)-100)*adhA))));
+ bendL.setAttribute('stroke',col(D(790)));dctL.setAttribute('stroke',col(A(250)));
+ // labels
+ LV.forEach((y,i)=>{lblD[i].textContent=r5(D(y));lblA[i].textContent=r5(A(y));lblI[i].textContent=r5(I(y));lblVL[i].textContent=r5(I(y));lblVR[i].textContent=r5(i==0?I(y)*1.08-24:I(y))});
+ lblT.textContent=r5(D(800));lblDi.textContent=r5(A(300));lblU.textContent='Urine '+r5(100+(I(800)-100)*adhA)+' mOsm';
+ const act=g>.03?1:0;arrW.forEach(a=>a.setAttribute('opacity',Math.min(1,g*3+.0)*(g>.02?1:0)));arrN.forEach(a=>a.setAttribute('opacity',pump?Math.min(1,.25+g):Math.max(0,g)*.5));arrC.forEach(a=>a.setAttribute('opacity',adhA*Math.min(1,g*3)));arrV.forEach(a=>a.setAttribute('opacity',$('vx').checked?Math.min(1,g*3):0));
+ // Soft, short blink synchronised with the actual emission of each solute dot.
+ for(const a of [...arrW,...arrN,...arrC]){
+  const remain=Math.max(0,(arrowFlash.get(a)||0)-dt);
+  arrowFlash.set(a,remain);
+  const pulse=remain>0?Math.sin((1-remain/0.38)*Math.PI):0;
+  a.style.filter=pulse>0.02?`brightness(${1+pulse*0.8}) drop-shadow(0 0 ${Math.round(2+pulse*5)}px ${arrN.includes(a)?'#ef4444':'#60a5fa'})`:'';
+  if(pulse>0.02){const current=Number(a.getAttribute('opacity')||0);a.setAttribute('opacity',Math.max(current,Math.min(1,0.35+pulse*.65)))}
+ }
+ $('gd').textContent='Gradient: '+Math.round(g*100)+'%';
+ // steps
+ cards.forEach((c,i)=>{c.className='st'+(step==i+1?' on':'');c.setAttribute('aria-pressed',step==i+1)});
+ HL.forEach((h,i)=>{if(h)h.setAttribute('opacity',step==i?.55+.45*Math.sin(now/300):0)});ncs.forEach((c,i)=>{if(c)c.setAttribute('opacity',step==0||step==i?1:.35)});
+ // particles
+ fb.forEach(b=>{b.d=(b.d+60*dt)%FL;const p=fp.getPointAtLength(b.d);b.e.setAttribute('cx',p.x);b.e.setAttribute('cy',p.y)});
+ vb.forEach(b=>{b.d=(b.d+38*dt)%VL;const p=vp.getPointAtLength(b.d);b.e.setAttribute('cx',p.x);b.e.setAttribute('cy',p.y)});
+ acc.w+=dt*2.6*Math.min(1,g*2.5)*(g>.01?1:0);while(acc.w>=1){acc.w--;spawn(440,310+Math.random()*470,-1,'w')}
+ acc.n+=dt*(pump?3:0)*(1.2-.5*g)+dt*(pump?0:1.2*g);while(acc.n>=1){acc.n--;if(pump||Math.random()<.4)spawn(560,300+Math.random()*470,-1,'n')}
+ acc.c+=dt*2.2*adhA*Math.min(1,g*2.5);while(acc.c>=1){acc.c--;spawn(880,330+Math.random()*450,-1,'c')}
+ acc.v=$('vx').checked?(acc.v||0)+dt*1.8*Math.min(1,g*2.5):0;while(acc.v>=1){acc.v--;const y=330+Math.random()*450;spawn(292,y,1,'w');spawn(342,y+14,-1,'n');spawn(772,y,-1,'w');spawn(722,y+14,1,'n')}
+ for(const q of pts){q.t+=dt;q.x+=q.dx*(q.type=='c'?55:45)*dt;q.e.setAttribute('cx',q.x);q.e.setAttribute('cy',q.y+(q.type=='w'?Math.sin(q.t*6)*1.5:0));q.e.setAttribute('opacity',dotsVisible(q.type)?Math.max(0,1-q.t/1.5):0);if(q.t>1.5)q.dead=true}
+ pts=pts.filter(q=>{if(q.dead)q.e.remove();return !q.dead});
+ document.querySelectorAll('.fi').forEach(c=>{const on=$(c.dataset.for).checked;c.classList.toggle('is-on',on);c.querySelector('i').textContent=on?'ON':'OFF';c.querySelectorAll('p').forEach(p=>p.classList.toggle('cur',(p.dataset.s=='on')==on))});
+ {const U=100+(I(800)-100)*adhA,vol=600/U,tgt=.08+.92*Math.min(1,Math.max(0,(vol-.5)/5.5));
+  cupF+=(tgt-cupF)*Math.min(1,dt*2);const h=cupF*CH,c=col(U);
+  cupFill.setAttribute('y',CB-h);cupFill.setAttribute('height',h);cupFill.setAttribute('fill',c);
+  cupSurf.setAttribute('d',`M830 ${CB-h}H930`);
+  const sw=2+vol*.8;stOff-=dt*60;const d=`M880 822V${CB-h}`;
+  [stOut,stIn].forEach((p,i)=>{p.setAttribute('d',d);p.setAttribute('stroke-width',sw+(i?0:2));p.setAttribute('stroke-dashoffset',stOff)});stIn.setAttribute('stroke',c);
+  lblVol.textContent='≈ '+vol.toFixed(1)+' L/day';
+  lblQ.textContent=U<=150?'Dilute · large volume':U<=450?'Near isosmotic':U<900?'Concentrated · less volume':'Concentrated · small volume'}
+ requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+</script></body></html>
